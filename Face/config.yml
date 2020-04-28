@@ -1,0 +1,5 @@
+ip_address : 'mqtt.mymacz.com'
+port : 1883
+topic : 'person/name/'
+websocket_port : 8000
+
