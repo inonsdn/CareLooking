@@ -32,25 +32,10 @@ def server():
             filess = request.files['file']
         except:
             status_img = request.get_data(as_text=True)
-        
-        # print('filess ', filess)
-        # print('status_img ', status_img)
-        # print("------------------------- INITIAL STATUS -------------------------")
-        # print('action_read_queue is {}'.format(queue.action_read_queue))
-        # print('face_read_queue is {}'.format(queue.face_read_queue))
-        # print('action_status is {}'.format(queue.action_status))
-        # print('face_status is {}'.format(queue.face_status))
-        # print('action_save_queue is {}'.format(queue.action_save_queue))
-        # print('face_save_queue is {}'.format(queue.face_save_queue))
-        # print('not_save_queue is {}'.format(queue.not_save_queue))
-        # print('action_queue is {}'.format(queue.action_queue))
-        # print('face_queue is {}'.format(queue.face_queue))
-        # print("------------------------------------------------------------------")
     
         if filess != None:
             print(type(filess))                     # filename waitCL0001.jpg
             userid = filess.filename[-10:-4]       # CL0001
-            # status_img = filess.filename[-14:-10]   # wait or done
             
             print("GET IMAGE FILE NAME {} USERID {}".format(filess.filename, str(userid)))
             if filess.filename[0] == 'a':
@@ -58,18 +43,6 @@ def server():
                 queue.save_for(userid, filess, 'action')
                 
                 status_action_process = queue.get_status('action')
-                
-                # print("------------------------- FIRST IS A STATUS -------------------------")
-                # print('action_read_queue is {}'.format(queue.action_read_queue))
-                # print('face_read_queue is {}'.format(queue.face_read_queue))
-                # print('action_status is {}'.format(queue.action_status))
-                # print('face_status is {}'.format(queue.face_status))
-                # print('action_save_queue is {}'.format(queue.action_save_queue))
-                # print('face_save_queue is {}'.format(queue.face_save_queue))
-                # print('not_save_queue is {}'.format(queue.not_save_queue))
-                # print('action_queue is {}'.format(queue.action_queue))
-                # print('face_queue is {}'.format(queue.face_queue))
-                # print("------------------------------------------------------------------")
                 
                 if status_action_process == 'ready':
                     queue.update_status('action', 'busy')
@@ -129,7 +102,7 @@ def server():
         
             else:
                 status = queue.thread('face', face_url)
-        print("------------------------- FIRST IS F STATUS -------------------------")
+        print("------------------------------------------------------------------")
         print('action_read_queue is {}'.format(queue.action_read_queue))
         print('face_read_queue is {}'.format(queue.face_read_queue))
         print('action_status is {}'.format(queue.action_status))
