@@ -9,6 +9,7 @@ from flask import Flask, request, abort, send_from_directory, jsonify
 
 
 app = Flask(__name__)
+queue_url = os.getenv('QUEUE_URL', 'https://127.0.0.1:5000/server')
 
 def on_publish(client, userdata, mid):
     print("mid: "+str(mid))
@@ -30,15 +31,13 @@ def action_detect():
         
         client.publish(data_config['topic'] + str(userid), results)
         
-        response = requests.post(url_config['queue_url'], data = 'done')
+        response = requests.post(queue_url, data = 'done')
         
         return 'OK'
 
 if __name__ == "__main__":
     data_config = {}
     data_config = yaml.load(open('config.yml'))
-    url_config = {}
-    url_config = yaml.load(open('url_config.yml'))
     client = paho.Client()
     client.on_publish = on_publish
     client.connect(data_config['ip_address'], data_config['port'])

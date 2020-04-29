@@ -9,21 +9,19 @@ from PIL import Image
 import requests, threading
 from concurrent.futures import ThreadPoolExecutor
 
-def request_url(imgfiles):
-    url_config = {}
-    url_config = yaml.load(open('url_config.yml'))
+def request_url(imgfiles, url):
     print("IN FUNC REQUEST")
     print(imgfiles[0], type(imgfiles))
     
     if imgfiles[19] == 'a':     # imgfiles = 'api_database/image/action....'
         print("IN a COND")  
         myfiles = {'file': open(imgfiles ,'rb')}
-        r = requests.post(url_config['action_url'], files=myfiles)
+        r = requests.post(url, files=myfiles)
         return r
 
     elif imgfiles[19] == 'f':
         myfiles = {'file': open(imgfiles ,'rb')}
-        r = requests.post(url_config['face_url'], files=myfiles)
+        r = requests.post(url, files=myfiles)
         return r
     
 class Q(object):
@@ -149,8 +147,8 @@ class Q(object):
                     os.rename(self.path + name_file + userid + '.jpg', self.path + str(int(name_file[0])-1) + name_file[1:] + userid + '.jpg')
     
 
-    def thread(self, state):
-        test_url = []
+    def thread(self, state, url):
+        send_url = []
         file_list = []
         
         if state == 'action':
@@ -161,7 +159,8 @@ class Q(object):
                 
             if type(img_action) is not int:
                 file_list.append(img_action)
-                
+                send_url.append(url)
+
         elif state == 'face':
             try:
                 img_face = self.read_for('face')
@@ -170,10 +169,11 @@ class Q(object):
         
             if type(img_face) is not int:
                 file_list.append(img_face)
-                
+                send_url.append(url)
+
         else:
             return 'Wrong Argument : state have only action and face'
         pool = ThreadPoolExecutor(max_workers=5)
-        result = pool.map(request_url, file_list)
+        result = pool.map(request_url, file_list, send_url)
 
         return result

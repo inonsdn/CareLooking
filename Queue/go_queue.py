@@ -15,6 +15,10 @@ from concurrent.futures import ThreadPoolExecutor
 
 app = Flask(__name__)
 
+queue_url = os.getenv('QUEUE_URL', 'https://127.0.0.1:5000/server')
+action_url = os.getenv('ACTION_URL', 'https://127.0.0.1:5001/action')
+face_url = os.getenv('FACE_URL', 'https://127.0.0.1:5002/face')
+
 @app.route("/server", methods=['POST'])
 def server():
     if request.method == 'POST':
@@ -69,7 +73,7 @@ def server():
                 
                 if status_action_process == 'ready':
                     queue.update_status('action', 'busy')
-                    status = queue.thread('action')
+                    status = queue.thread('action', action_url)
             
             elif filess.filename[0] == 'f':
                 queue.save_for(userid, filess, 'face')
@@ -83,11 +87,11 @@ def server():
                     queue.update_status('action','ready')
                 
                 else:
-                    status = queue.thread('action')
+                    status = queue.thread('action', action_url)
                     
                 if status_face_process == 'ready':
                     queue.update_status('face', 'busy')
-                    status = queue.thread('face')
+                    status = queue.thread('face', face_url)
             
             elif filess.filename[0] == 'n':
                 queue.save_for(userid, filess, 'not')
@@ -100,7 +104,7 @@ def server():
                     queue.update_status('action','ready')
                 
                 else:
-                    status = queue.thread('action')
+                    status = queue.thread('action', action_url)
                     
             elif filess.filename[0] == 'c':
                 status_action_process = queue.get_status('action')
@@ -111,7 +115,7 @@ def server():
                     queue.update_status('action','ready')
                 
                 else:
-                    status = queue.thread('action')
+                    status = queue.thread('action', action_url)
                     
                     
                     
@@ -124,7 +128,7 @@ def server():
                 print(queue.time_process(calculate=True))
         
             else:
-                status = queue.thread('face')
+                status = queue.thread('face', face_url)
         print("------------------------- FIRST IS F STATUS -------------------------")
         print('action_read_queue is {}'.format(queue.action_read_queue))
         print('face_read_queue is {}'.format(queue.face_read_queue))
