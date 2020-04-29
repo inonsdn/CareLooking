@@ -122,7 +122,6 @@ def server():
                 
                 queue.time_process('end')
                 print(queue.time_process(calculate=True))
-
         
             else:
                 status = queue.thread('face')
