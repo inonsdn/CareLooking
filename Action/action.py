@@ -17,7 +17,7 @@ queue_url = os.getenv('QUEUE_URL', 'https://127.0.0.1:5000/server')
 @app.route('/action',methods=['POST'])
 def action_detect():
     if request.method == 'POST':
-
+        # get image file
         filess = request.files['file']
         file_name = filess.filename[:-4]
         userid = file_name[-6:]

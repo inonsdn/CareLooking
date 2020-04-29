@@ -297,11 +297,15 @@ class recogn:
                     init_label = Actions(pred).name
                     # 显示动作类别
                     print(init_label)
+
                     # cv.putText(npimg, init_label, (xmin + 80, ymin - 45), cv.FONT_HERSHEY_SIMPLEX, 1, self.trk_clr, 3)
                     # 异常预警(under scene)
                     if init_label == 'stand':
+                        label = 'stand'
                         print("Standing")
-                        
+                    
+                    else:
+                        label = 'not'
                         
                     # 画track_box
                     # cv.rectangle(npimg, (xmin - 10, ymin - 30), (xmax + 10, ymax), self.trk_clr, 2)
@@ -311,7 +315,11 @@ class recogn:
                     w = xmax - x
                     crop_img = npimg[y:y+h, x:x+w]
                 
-                    all_frame.append((init_label, crop_img))    
-                    
-        return all_frame
+                    all_frame.append((label, crop_img))    
+        
+        if len(all_frame) == 0:
+            return ('cannot detect', None)
+        
+        else:
+            return all_frame
             

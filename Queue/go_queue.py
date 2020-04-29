@@ -1,4 +1,4 @@
-import cv2 as cv
+import cv2
 import os
 import io
 import sys
@@ -32,22 +32,27 @@ def server():
             filess = request.files['file']
         except:
             status_img = request.get_data(as_text=True)
-    
+
+        # if got the image file
         if filess != None:
-            print(type(filess))                     # filename waitCL0001.jpg
-            userid = filess.filename[-10:-4]       # CL0001
+            userid = filess.filename[-10:-4]       # extract userid from filename
             
             print("GET IMAGE FILE NAME {} USERID {}".format(filess.filename, str(userid)))
+
+            # check if got image file for action process
             if filess.filename[0] == 'a':
                 queue.time_process('start')
                 queue.save_for(userid, filess, 'action')
                 
                 status_action_process = queue.get_status('action')
                 
+                # check the action queue are ready to process or not
+                # if ready, send the next image in queue to action api
                 if status_action_process == 'ready':
                     queue.update_status('action', 'busy')
                     status = queue.thread('action', action_url)
-            
+
+            # check if got image file for face process
             elif filess.filename[0] == 'f':
                 queue.save_for(userid, filess, 'face')
                 
@@ -55,17 +60,22 @@ def server():
                 status_face_process = queue.get_status('face')
                 action_queue = queue.check_queue('action')
                 
-                
+                # check action queue have or not
+                # if not, change action status to 'ready'
                 if action_queue == False:
                     queue.update_status('action','ready')
                 
+                # if have queue, send the next image
                 else:
                     status = queue.thread('action', action_url)
-                    
+
+                # check the face queue are ready to process or not
+                # if ready, send the next image in queue to face api
                 if status_face_process == 'ready':
                     queue.update_status('face', 'busy')
                     status = queue.thread('face', face_url)
-            
+
+            # check if got not image file
             elif filess.filename[0] == 'n':
                 queue.save_for(userid, filess, 'not')
                 
@@ -78,7 +88,8 @@ def server():
                 
                 else:
                     status = queue.thread('action', action_url)
-                    
+            
+            # check if got cannot image file
             elif filess.filename[0] == 'c':
                 status_action_process = queue.get_status('action')
                 status_face_process = queue.get_status('face')
@@ -87,19 +98,24 @@ def server():
                 if action_queue == False:
                     queue.update_status('action','ready')
                 
+                
                 else:
                     status = queue.thread('action', action_url)
                     
                     
-                    
+        # if got the text
         elif status_img != None:
             face_queue = queue.check_queue('face')
+
+            # check face queue have or not
+            # if not, change face status to 'ready'
             if face_queue == False:
                 queue.update_status('face','ready')
                 
                 queue.time_process('end')
                 print(queue.time_process(calculate=True))
-        
+
+            # if have queue, send the next image
             else:
                 status = queue.thread('face', face_url)
         print("------------------------------------------------------------------")
