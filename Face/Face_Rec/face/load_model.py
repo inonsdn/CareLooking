@@ -11,9 +11,9 @@ import tensorflow as tf
 import time
 from keras.layers.normalization import BatchNormalization
 
-def load_model_me():
-    model = load_model(os.path.join('Face_Rec/face/modelfaceregV4.h5'))
-    model.load_weights(os.path.join('Face_Rec/face/weightfaceregV4.h5'))
+def load_model_me(model_path, weight_path):
+    model = load_model(os.path.join(model_path))
+    model.load_weights(os.path.join(weight_path))
 
                 
     model.compile(loss='categorical_crossentropy',

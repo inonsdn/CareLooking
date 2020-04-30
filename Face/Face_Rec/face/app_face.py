@@ -27,12 +27,12 @@ def on_publish(client, userdata, mid):
     print("mid: "+str(mid))
 
 class FaceRecognition:
-    def __init__(self):
+    def __init__(self, model_path, weight_path):
         self.face_cascade_path = "Face_Rec/face/haarcascade_frontalface_alt.xml"
         global face_cascade
         global model
         self.SetGpuLimitation(0.3)
-        model = load_model_me()
+        model = load_model_me(model_path, weight_path)
         face_cascade = cv2.CascadeClassifier(self.face_cascade_path)
 
         

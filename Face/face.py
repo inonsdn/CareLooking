@@ -36,11 +36,16 @@ def action_detect():
         return 'OK'
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='input model path')
+    parser.add_argument('--model', type=str, default='Face_Rec/face/modelfaceregV4.h5')
+    parser.add_argument('--weight', type=str, default='Face_Rec/face/weightfaceregV4.h5')
+    args = parser.parse_args()
+
     data_config = {}
     data_config = yaml.load(open('config.yml'))
     client = paho.Client()
     client.on_publish = on_publish
     client.connect(data_config['ip_address'], data_config['port'])
     client.loop_start()
-    faces = FaceRecognition()
+    faces = FaceRecognition(args.model, args.weight)
     app.run(port=5002)  

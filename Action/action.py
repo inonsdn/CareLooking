@@ -56,10 +56,14 @@ def action_detect():
             return 'OK'
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='input model path')
+    parser.add_argument('--model', type=str, default='Action_Detection/Action/framewise_recognition.h5')
+    args = parser.parse_args()
+    
     # load model from class something
     estimate = estimator_pose(load_pretrain_model('VGG_origin'))
     print('Graph path is {}'.format(load_pretrain_model('VGG_origin')))
-    r = recogn("Action_Detection/Action/framewise_recognition.h5")
+    r = recogn(args.model)
     
     app.run(port=5001)  
 
