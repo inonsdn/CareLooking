@@ -2,6 +2,7 @@ import cv2
 import time
 import yaml
 import requests
+import argparse
 import paho.mqtt.client as paho
 from make_queue import Q
 from Face_Rec.face.app_face import FaceRecognition
