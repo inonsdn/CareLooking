@@ -11,5 +11,5 @@ PyYAML==5.3.1
 requests==2.23.0
 scikit-learn==0.22.2.post1
 scipy==1.4.1
-tensorflow-gpu==1.14.0
+tensorflow-gpu==2.5.3
 opencv-python
